@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YbltTnXV2BKNNQJ2PfcXfD5DFQDqUUsmDs0wyb0Te2ivw3e1Ab9X2FI0BrYCC0lX3PW7Mm6eVBDM6NOpq6YIpQ==",
+  "dgSpecHash": "yJe+iwgRzkEuDJntjoC6/w19/Uk3qz6VvIvS1YErWveZfS1UB9F8noASiVapcfT2AaMBD7CMT80qa3eLvTamxA==",
   "success": true,
-  "projectFilePath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
+  "projectFilePath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
   "expectedPackageFiles": [
     "/Users/razvybitea/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/razvybitea/.nuget/packages/microsoft.aspnetcore.openapi/7.0.11/microsoft.aspnetcore.openapi.7.0.11.nupkg.sha512",

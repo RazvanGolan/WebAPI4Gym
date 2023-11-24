@@ -20,6 +20,8 @@
     <ItemGroup>
       <Compile Remove="WeatherForecast.cs" />
       <Compile Remove="Controllers\WeatherForecastController.cs" />
+      <Compile Remove="Entities\DateConverter.cs" />
+      <Compile Remove="Entities\CustomDate.cs" />
     </ItemGroup>
 
 </Project>

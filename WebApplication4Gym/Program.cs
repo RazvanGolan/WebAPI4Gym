@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDBContext>(optionsAction:options =>
     options.UseNpgsql("User ID=guest;Password=cocacola;Host=gdscupt.tech;Port=6969;Database=Workshop_golan;Pooling=true;"));
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); //for DateTime error when reading
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

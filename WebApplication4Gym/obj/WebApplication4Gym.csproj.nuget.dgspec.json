@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/WebApplication4Gym.csproj": {}
+    "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj": {}
   },
   "projects": {
-    "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/WebApplication4Gym.csproj": {
+    "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
+        "projectUniqueName": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
         "projectName": "WebApplication4Gym",
-        "projectPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
+        "projectPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
         "packagesPath": "/Users/razvybitea/.nuget/packages/",
-        "outputPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebApplication4Gym/obj/",
+        "outputPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/razvybitea/.nuget/NuGet/NuGet.Config"

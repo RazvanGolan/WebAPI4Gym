@@ -53,7 +53,7 @@ public class MemberController : ControllerBase
 
         try
         {
-            member = Member.Create(memberRequest.FirstName, memberRequest.LastName);
+            member = Member.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date);
         }
         catch (Exception e)
         {
@@ -105,7 +105,7 @@ public class MemberController : ControllerBase
         var member = _dbContext.Members.FirstOrDefault(m => m.Id == Id);
 
         if (member is null)
-            return NotFound($"Member with Id: {Id} doesnt exis broteher");
+            return NotFound($"Member with Id: {Id} doesnt exist brother");
         
         try
         {
