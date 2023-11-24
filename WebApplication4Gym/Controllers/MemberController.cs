@@ -53,7 +53,7 @@ public class MemberController : ControllerBase
 
         try
         {
-            member = Member.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date);
+            member = Member.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Coach);
         }
         catch (Exception e)
         {
