@@ -1,24 +1,19 @@
-using System.Globalization;
-using System.Runtime.InteropServices.JavaScript;
-using Microsoft.AspNetCore.Http.HttpResults;
-
 namespace WebApplication4Gym.Entities;
 
-public class Member : Entity
+public class Coach : Entity
 {
-    //public string Id { get; private set; }
-    
     public string FirstName { get; private set; }
 
     public string LastName { get; private set; }
+    
     public DateTime Created { get; private set; }
-    public bool GoldenState { get; private set; }
-    private Member()
+
+    private Coach()
     {
         
     }
 
-    public static Member Create(string firstname, string lastname, string date)
+    public static Coach Create(string firstname, string lastname, string date)
     {
         if (string.IsNullOrWhiteSpace(firstname))
             throw new Exception("First name can't be empty.");
@@ -36,21 +31,13 @@ public class Member : Entity
         
         if(!DateTime.TryParseExact(date, formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsed))
             throw new Exception("incorrect date format");
-        
-        Member x = new Member
+
+        return new Coach
         {
             FirstName = firstname,
             LastName = lastname,
-            Created = parsed,
-            GoldenState = false
+            Created = parsed
         };
-        //getting total number of days
-        var totalDays = (DateTime.Now - x.Created).Days;
-
-        if (totalDays >= 90)
-            x.GoldenState = true;
-        
-        return x;
     }
     
     public void SetFirstName(string firstName)
@@ -85,5 +72,4 @@ public class Member : Entity
         
         Created = parse;
     }
-    
 }

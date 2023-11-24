@@ -111,6 +111,9 @@ public class MemberController : ControllerBase
         {
             member.SetFirstName(memberRequest.FirstName);
             member.SetLastName(memberRequest.LastName);
+            
+            if(memberRequest.Date is not "string")
+                member.SetCreated(memberRequest.Date);
         }
         catch (Exception e)
         {
