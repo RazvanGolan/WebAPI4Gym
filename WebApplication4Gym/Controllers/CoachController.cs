@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication4Gym.Entities;
 using WebApplication4Gym.Repository;
+using Member = WebApplication4Gym.Migrations.Member;
 
 namespace WebApplication4Gym.Controllers;
 
@@ -39,7 +40,6 @@ public class CoachController : ControllerBase
     public ActionResult AddCoach([FromBody] CoachRequest coachRequest)
     {
         Coach coach = null;
-
         try
         {
             coach = Coach.Create(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date, coachRequest.Members);
@@ -68,7 +68,7 @@ public class CoachController : ControllerBase
         
         return Ok($"All good, {Id} is no longer along us");
     }
-
+    /*
     [HttpPatch(template: "{Id}")]
     public ActionResult UpdateCoachFirstName(string Id, [FromBody] string firstName)
     {
@@ -80,6 +80,33 @@ public class CoachController : ControllerBase
         try
         {
             coach.SetFirstName(firstName);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        _dbContext.SaveChanges();
+        return Ok(coach);
+    }
+    */
+    
+    [HttpPatch(template: "{Id}")]
+    public ActionResult UpdateCoachMembers(string Id, [FromBody] string memberId)
+    {
+        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Id == Id);
+        
+        if (coach is null)
+            return NotFound($"Coach with {Id} doesn't exist");
+
+        var member = _dbContext.Members.FirstOrDefault(m => m.Id == memberId);
+
+        if (member is null)
+            return NotFound($"Member with {Id} doesn't exist");
+        
+        try
+        {
+            coach.addMember(member);
         }
         catch (Exception e)
         {

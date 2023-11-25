@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace WebApplication4Gym.Entities;
 
 public class Coach : Entity
@@ -8,7 +10,7 @@ public class Coach : Entity
     
     public DateTime Created { get; private set; }
 
-    public List<Member> MemberList { get;  set; }
+    public ICollection<Member> MemberList { get; set; } = new List<Member>();
 
     private Coach()
     {
@@ -80,4 +82,10 @@ public class Coach : Entity
     {
         return Id;
     }
+
+    public void addMember(Member member)
+    {
+        MemberList.Add(member);
+    }
+    
 }

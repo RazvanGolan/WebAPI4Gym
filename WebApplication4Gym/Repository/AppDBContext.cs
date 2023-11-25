@@ -14,9 +14,9 @@ public class AppDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
     }
     
     public DbSet<Member> Members { get; set; }
     public DbSet<Coach> Coaches { get; set; }
+    
 }

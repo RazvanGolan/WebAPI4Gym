@@ -12,13 +12,6 @@ public class MemberController : ControllerBase
 {
 
     private readonly AppDBContext _dbContext; //pentru readonly pune _
-    
-    /*
-    private static readonly List<Member> _list = new()
-    {
-        Member.Create("Razvan", "Golan"),
-        Member.Create("denis", "Beleaua")
-    }; */
 
     public MemberController(AppDBContext dbContext)
     {
@@ -50,7 +43,7 @@ public class MemberController : ControllerBase
     public ActionResult CreateMember([FromBody] MemberRequest memberRequest)
     {
         Member member = null;
-
+        
         try
         {
             member = Member.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Coach);
@@ -64,7 +57,8 @@ public class MemberController : ControllerBase
         _dbContext.SaveChanges();
         return Ok(member);
     }
-
+    
+    /*
     [HttpDelete(template: "{Id}")]
     public ActionResult DeleteMember(string Id)
     {
@@ -77,7 +71,27 @@ public class MemberController : ControllerBase
         _dbContext.SaveChanges();
         return Ok($"All good, {Id} is no longer along us");
     }
+    */
 
+    [HttpDelete(template: "{Id}")]
+    public ActionResult DeleteMemberCoach(string Id)
+    {
+        var member = _dbContext.Members.FirstOrDefault(m => m.Id == Id);
+
+        if (member is null)
+            return NotFound($"Member with Id: {Id} doesnt exis broteher");
+
+        if (member.Coach is null)
+            return BadRequest($"Member with Id: {Id} doesn't have a coach");
+
+        member.Coach = null;
+
+        _dbContext.Remove(member);
+        _dbContext.SaveChanges();
+        return Ok($"All good, {member.FirstName}'s member is no longer along us");
+    }
+    
+    /*
     [HttpPatch(template: "{Id}")]
     public ActionResult UpdateMemberFirstName(string Id, [FromBody] string firstName)
     {
@@ -89,6 +103,27 @@ public class MemberController : ControllerBase
         try
         {
             member.SetFirstName(firstName);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        _dbContext.SaveChanges();
+        return Ok(member);
+    } */
+    
+    [HttpPatch(template: "{Id}")]
+    public ActionResult UpdateMemberCoach(string Id, [FromBody] Coach coach)
+    {
+        var member = _dbContext.Members.FirstOrDefault(m => m.Id == Id);
+
+        if (member is null)
+            return NotFound($"Member with Id: {Id} doesnt exis broteher");
+        
+        try
+        {
+            member.setCoach(coach);
         }
         catch (Exception e)
         {

@@ -13,8 +13,7 @@ public class Member : Entity
     public string LastName { get; private set; }
     public DateTime Created { get; private set; }
     public bool GoldenState { get; private set; }
-    public Coach PersonalCoach { get;  set; }
-    public string CoachId { get;  set; }
+    public Coach? Coach { get;  set; }
     private Member()
     {
         
@@ -37,6 +36,9 @@ public class Member : Entity
         
         if(!DateTime.TryParseExact(date, formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsed))
             throw new Exception("incorrect date format");
+
+        if (coach.GetID() is "string")
+            coach = null;
         
         Member x = new Member
         {
@@ -44,8 +46,7 @@ public class Member : Entity
             LastName = lastname,
             Created = parsed,
             GoldenState = false,
-            PersonalCoach = coach,
-            CoachId = coach.GetID()
+            Coach = coach
         };
         //getting total number of days
         var totalDays = (DateTime.Now - x.Created).Days;
@@ -91,7 +92,7 @@ public class Member : Entity
 
     public void setCoach(Coach coach)
     {
-        PersonalCoach = coach;
+        Coach = coach;
     }
     
 
