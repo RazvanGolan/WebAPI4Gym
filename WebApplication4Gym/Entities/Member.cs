@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Http.HttpResults;
+using WebApplication4Gym.Repository;
 
 namespace WebApplication4Gym.Entities;
 
@@ -13,14 +14,15 @@ public class Member : Entity
     public string LastName { get; private set; }
     public DateTime Created { get; private set; }
     public bool GoldenState { get; private set; }
-    public Coach? Coach { get;  set; }
+    public String Email { get; private set; }
     private Member()
     {
         
     }
-
-    public static Member Create(string firstname, string lastname, string date, Coach coach)
+    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, string email)
     {
+        if (await _repository.IsEmailUnique(email))
+            throw new Exception("this email is already eused");
         if (string.IsNullOrWhiteSpace(firstname))
             throw new Exception("First name can't be empty.");
 
@@ -30,15 +32,15 @@ public class Member : Entity
         if (string.IsNullOrWhiteSpace(date))
             throw new Exception("date can't be empty.");
         
+        //validare la email cu gpt
+        
         DateTime parsed;
         string[] formats = { "dd/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "d/MM/yyyy",
-            "dd/MM/yy", "dd/M/yy", "d/M/yy", "d/MM/yy", "dd-MM-yyyy"};
+            "dd/MM/yy", "dd/M/yy", "d/M/yy", "d/MM/yy", "dd-MM-yyyy", "dd-M-yyyy", "d-M-yyyy", "d-MM-yyyy",
+            "dd-MM-yy", "dd-M-yy", "d-M-yy", "d-MM-yy"};
         
         if(!DateTime.TryParseExact(date, formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsed))
             throw new Exception("incorrect date format");
-
-        if (coach.GetID() is "string")
-            coach = null;
         
         Member x = new Member
         {
@@ -46,7 +48,7 @@ public class Member : Entity
             LastName = lastname,
             Created = parsed,
             GoldenState = false,
-            Coach = coach
+            Email = email
         };
         //getting total number of days
         var totalDays = (DateTime.Now - x.Created).Days;
@@ -74,7 +76,7 @@ public class Member : Entity
 
         LastName = lastName;
     }
-
+    
     public void SetCreated(string date)
     {
         if (string.IsNullOrWhiteSpace(date))
@@ -90,10 +92,8 @@ public class Member : Entity
         Created = parse;
     }
 
-    public void setCoach(Coach coach)
+    public void SetEmail(string email)
     {
-        Coach = coach;
+        Email = email;
     }
-    
-
 }

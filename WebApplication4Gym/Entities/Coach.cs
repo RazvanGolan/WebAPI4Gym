@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace WebApplication4Gym.Entities;
 
 public class Coach : Entity
@@ -10,14 +8,12 @@ public class Coach : Entity
     
     public DateTime Created { get; private set; }
 
-    public ICollection<Member> MemberList { get; set; } = new List<Member>();
-
     private Coach()
     {
         
     }
 
-    public static Coach Create(string firstname, string lastname, string date, List<Member> members)
+    public static Coach Create(string firstname, string lastname, string date)
     {
         if (string.IsNullOrWhiteSpace(firstname))
             throw new Exception("First name can't be empty.");
@@ -40,8 +36,7 @@ public class Coach : Entity
         {
             FirstName = firstname,
             LastName = lastname,
-            Created = parsed,
-            MemberList = members
+            Created = parsed
         };
     }
     
@@ -77,15 +72,4 @@ public class Coach : Entity
         
         Created = parse;
     }
-
-    public string GetID()
-    {
-        return Id;
-    }
-
-    public void addMember(Member member)
-    {
-        MemberList.Add(member);
-    }
-    
 }

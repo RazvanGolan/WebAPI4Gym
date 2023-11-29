@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDBContext>(optionsAction:options => 
     options.UseNpgsql("User ID=guest;Password=cocacola;Host=gdscupt.tech;Port=6969;Database=Workshop_golan;Pooling=true;"));
 
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); //for DateTime error when reading
 
@@ -32,5 +34,5 @@ app.MapControllers();
 
 app.Run();
 
-//clasa de antrenor, optiunea ca un membru sa aiba antrenor
-//data cand s-a inscris cu multe optiuni de introducere
+//schimba la connection string
+//toate metodele ASYNC

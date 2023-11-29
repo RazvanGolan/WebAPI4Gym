@@ -18,5 +18,4 @@ public class AppDBContext : DbContext
     
     public DbSet<Member> Members { get; set; }
     public DbSet<Coach> Coaches { get; set; }
-    
 }
