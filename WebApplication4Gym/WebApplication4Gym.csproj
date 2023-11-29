@@ -22,6 +22,12 @@
       <Compile Remove="Controllers\WeatherForecastController.cs" />
       <Compile Remove="Entities\DateConverter.cs" />
       <Compile Remove="Entities\CustomDate.cs" />
+      <Compile Remove="Migrations\20231124142550_Member.cs" />
+      <Compile Remove="Migrations\20231124142550_Member.Designer.cs" />
+      <Compile Remove="Migrations\20231124143452_Members.cs" />
+      <Compile Remove="Migrations\20231124143452_Members.Designer.cs" />
+      <Compile Remove="Migrations\20231124143831_Coach.cs" />
+      <Compile Remove="Migrations\20231124143831_Coach.Designer.cs" />
     </ItemGroup>
 
 </Project>

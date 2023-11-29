@@ -22,7 +22,7 @@ namespace WebApplication4Gym.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Coach", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Coach.Coach", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -43,16 +43,21 @@ namespace WebApplication4Gym.Migrations
                     b.ToTable("Coaches");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Member", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Member.Member", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
                     b.Property<string>("CoachId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -72,16 +77,18 @@ namespace WebApplication4Gym.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Member", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Member.Member", b =>
                 {
-                    b.HasOne("WebApplication4Gym.Entities.Coach", "Coach")
+                    b.HasOne("WebApplication4Gym.Entities.Coach.Coach", "Coach")
                         .WithMany("MemberList")
-                        .HasForeignKey("CoachId");
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Coach");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Coach", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Coach.Coach", b =>
                 {
                     b.Navigation("MemberList");
                 });

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApplication4Gym.Entities;
+using Microsoft.EntityFrameworkCore;
+using WebApplication4Gym.Controllers.Member;
 using WebApplication4Gym.Repository;
-using Member = WebApplication4Gym.Migrations.Member;
 
-namespace WebApplication4Gym.Controllers;
+namespace WebApplication4Gym.Controllers.Coach;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -18,13 +18,33 @@ public class CoachController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllCoaches")]
-    public ActionResult GetCoaches()
+    public async Task<ActionResult<IEnumerable<CoachResponse>>> GetCoaches()
     {
-        var members = _dbContext.Set<Coach>().ToList();
-        
-        return Ok(members);
+        var coaches = await _dbContext.Coaches
+            .Include(c => c.MemberList)
+            .ToListAsync();
+
+        return Ok(coaches.Select(c=>new CoachResponse
+        {
+            Id = c.Id,
+            FirstName = c.FirstName,
+            LastName = c.LastName,
+            Created = c.Created,
+            Members = c.MemberList.Select(m=> new MemberResponse
+            {
+                Id = m.Id,
+                FirstName = m.FirstName,
+                LastName = m.LastName,
+                Created = m.Created,
+                GoldenState = m.GoldenState,
+                Email = m.Email,
+                CoachId = c.Id
+            }).ToList()
+        }));
+
     }
 
+    /*
     [HttpGet(template: "{Id}")]
     public ActionResult GetCoach(string Id)
     {
@@ -35,14 +55,14 @@ public class CoachController : ControllerBase
 
         return Ok(coach);
     }
-
+    */
     [HttpPost]
-    public ActionResult AddCoach([FromBody] CoachRequest coachRequest)
+    public async Task<ActionResult> AddCoach([FromBody] CoachRequest coachRequest)
     {
-        Coach coach = null;
+        Entities.Coach.Coach coach = null;
         try
         {
-            coach = Coach.Create(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date, coachRequest.Members);
+            coach = await Entities.Coach.Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date);
         }
         catch (Exception e)
         {
@@ -50,7 +70,7 @@ public class CoachController : ControllerBase
         }
 
         _dbContext.Add(coach);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return Ok(coach);
     }

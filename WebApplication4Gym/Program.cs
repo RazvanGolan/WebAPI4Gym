@@ -1,9 +1,11 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using WebApplication4Gym.Repository;
+using WebApplication4Gym.Entities.Member;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;// get connection string from appsettings.Development.json
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -12,7 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDBContext>(optionsAction:options => 
-    options.UseNpgsql("User ID=guest;Password=cocacola;Host=gdscupt.tech;Port=6969;Database=Workshop_golan;Pooling=true;"));
+    options.UseNpgsql(configuration.GetConnectionString("ConnectionString")));
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); //for DateTime error when reading
@@ -32,5 +35,3 @@ app.MapControllers();
 
 app.Run();
 
-//clasa de antrenor, optiunea ca un membru sa aiba antrenor
-//data cand s-a inscris cu multe optiuni de introducere
