@@ -11,6 +11,7 @@ public class Member : Entity
     public bool GoldenState { get; private set; }
     public string Email { get; private set; }
     public Coach Coach { get;  set; }
+    
     private Member()
     {
         
