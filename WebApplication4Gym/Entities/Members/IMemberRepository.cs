@@ -1,4 +1,4 @@
-namespace WebApplication4Gym.Entities.Member;
+namespace WebApplication4Gym.Entities.Members;
 
 public interface IMemberRepository
 {

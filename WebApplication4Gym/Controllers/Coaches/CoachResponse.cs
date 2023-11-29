@@ -1,6 +1,6 @@
-using WebApplication4Gym.Controllers.Member;
+using WebApplication4Gym.Controllers.Members;
 
-namespace WebApplication4Gym.Controllers.Coach;
+namespace WebApplication4Gym.Controllers.Coaches;
 
 public class CoachResponse
 {

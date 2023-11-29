@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplication4Gym.Entities;
-using WebApplication4Gym.Entities.Member;
+using WebApplication4Gym.Entities.Members;
 
 namespace WebApplication4Gym.Repository;
 

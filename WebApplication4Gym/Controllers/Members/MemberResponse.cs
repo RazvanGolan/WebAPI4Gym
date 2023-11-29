@@ -1,4 +1,4 @@
-namespace WebApplication4Gym.Controllers.Member;
+namespace WebApplication4Gym.Controllers.Members;
 
 public class MemberResponse
 {

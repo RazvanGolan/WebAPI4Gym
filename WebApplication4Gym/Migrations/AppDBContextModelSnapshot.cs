@@ -22,7 +22,7 @@ namespace WebApplication4Gym.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Coach.Coach", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Coaches.Coach", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -43,7 +43,7 @@ namespace WebApplication4Gym.Migrations
                     b.ToTable("Coaches");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Member.Member", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Members.Member", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -77,9 +77,9 @@ namespace WebApplication4Gym.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Member.Member", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Members.Member", b =>
                 {
-                    b.HasOne("WebApplication4Gym.Entities.Coach.Coach", "Coach")
+                    b.HasOne("WebApplication4Gym.Entities.Coaches.Coach", "Coach")
                         .WithMany("MemberList")
                         .HasForeignKey("CoachId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -88,7 +88,7 @@ namespace WebApplication4Gym.Migrations
                     b.Navigation("Coach");
                 });
 
-            modelBuilder.Entity("WebApplication4Gym.Entities.Coach.Coach", b =>
+            modelBuilder.Entity("WebApplication4Gym.Entities.Coaches.Coach", b =>
                 {
                     b.Navigation("MemberList");
                 });

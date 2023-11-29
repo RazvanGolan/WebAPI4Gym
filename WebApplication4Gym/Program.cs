@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using WebApplication4Gym.Entities.Members;
 using WebApplication4Gym.Repository;
-using WebApplication4Gym.Entities.Member;
 
 var builder = WebApplication.CreateBuilder(args);
 

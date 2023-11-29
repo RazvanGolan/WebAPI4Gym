@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication4Gym.Controllers.Member;
+using WebApplication4Gym.Controllers.Members;
+using WebApplication4Gym.Entities.Coaches;
 using WebApplication4Gym.Repository;
 
-namespace WebApplication4Gym.Controllers.Coach;
+namespace WebApplication4Gym.Controllers.Coaches;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -59,10 +60,10 @@ public class CoachController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> AddCoach([FromBody] CoachRequest coachRequest)
     {
-        Entities.Coach.Coach coach = null;
+        Coach coach = null;
         try
         {
-            coach = await Entities.Coach.Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date);
+            coach = await Entities.Coaches.Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date);
         }
         catch (Exception e)
         {

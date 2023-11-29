@@ -1,4 +1,6 @@
-namespace WebApplication4Gym.Entities.Coach;
+using WebApplication4Gym.Entities.Members;
+
+namespace WebApplication4Gym.Entities.Coaches;
 
 public class Coach : Entity
 {
@@ -8,7 +10,7 @@ public class Coach : Entity
     
     public DateTime Created { get; private set; }
 
-    public List<Member.Member> MemberList { get; set; } = new ();
+    public List<Member> MemberList { get; set; } = new ();
 
     private Coach()
     {
@@ -77,7 +79,7 @@ public class Coach : Entity
 
 
 
-    public void addMember(Member.Member member)
+    public void addMember(Member member)
     {
         MemberList.Add(member);
     }

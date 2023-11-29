@@ -1,11 +1,9 @@
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication4Gym.Entities;
-using WebApplication4Gym.Entities.Member;
+using WebApplication4Gym.Entities.Members;
 using WebApplication4Gym.Repository;
 
-namespace WebApplication4Gym.Controllers.Member;
+namespace WebApplication4Gym.Controllers.Members;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -24,7 +22,7 @@ public class MemberController : ControllerBase
     [HttpGet(Name = "GetAllMembers")]
     public async Task<ActionResult> GetMembers()
     {
-        var members = await _dbContext.Set<Entities.Member.Member>().ToListAsync();
+        var members = await _dbContext.Set<Entities.Members.Member>().ToListAsync();
         
         return Ok(members);
     }
@@ -45,13 +43,13 @@ public class MemberController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateMember([FromBody] MemberRequest memberRequest)
     {
-        Entities.Member.Member member = null;
+        Member member = null;
 
         var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == memberRequest.CoachId);
         
         try
         {
-            member = await Entities.Member.Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, coach, memberRequest.Email);
+            member = await Entities.Members.Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, coach, memberRequest.Email);
         }
         catch (Exception e)
         {

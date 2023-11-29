@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
-using WebApplication4Gym.Entities.Coach;
-namespace WebApplication4Gym.Entities.Member;
+using WebApplication4Gym.Entities.Coaches;
+
+namespace WebApplication4Gym.Entities.Members;
 
 public class Member : Entity
 {
@@ -9,13 +10,13 @@ public class Member : Entity
     public DateTime Created { get; private set; }
     public bool GoldenState { get; private set; }
     public string Email { get; private set; }
-    public Coach.Coach Coach { get;  set; }
+    public Coach Coach { get;  set; }
     private Member()
     {
         
     }
 
-    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, Coach.Coach coach, string email)
+    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, Coach coach, string email)
     {
         
         if (string.IsNullOrWhiteSpace(firstname))
@@ -112,7 +113,7 @@ public class Member : Entity
         Created = parse;
     }
 
-    public void setCoach(Coach.Coach coach)
+    public void setCoach(Coach coach)
     {
         Coach = coach;
     }
