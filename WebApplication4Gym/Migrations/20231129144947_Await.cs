@@ -13,7 +13,11 @@ namespace WebApplication4Gym.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Members_Coaches_CoachId",
                 table: "Members");
-
+            
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Coach",
+                table: "Coaches");
+            
             migrationBuilder.AlterColumn<string>(
                 name: "CoachId",
                 table: "Members",
@@ -46,6 +50,10 @@ namespace WebApplication4Gym.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Members_Coaches_CoachId",
                 table: "Members");
+            
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Coach",
+                table: "Coaches");
 
             migrationBuilder.DropColumn(
                 name: "Email",

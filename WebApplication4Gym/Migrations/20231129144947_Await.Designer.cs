@@ -12,7 +12,7 @@ using WebApplication4Gym.Repository;
 namespace WebApplication4Gym.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20231129142723_Await")]
+    [Migration("20231129144947_Await")]
     partial class Await
     {
         /// <inheritdoc />
