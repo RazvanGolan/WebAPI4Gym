@@ -11,7 +11,7 @@ namespace WebApplication4Gym.Controllers.Members;
 public class MemberController : ControllerBase
 {
 
-    private readonly AppDBContext _dbContext; //pentru readonly pune _
+    private readonly AppDBContext _dbContext; 
     private readonly IMemberRepository _repository;
     public MemberController(AppDBContext dbContext, IMemberRepository repository)
     {
@@ -22,9 +22,7 @@ public class MemberController : ControllerBase
     [HttpGet(Name = "GetAllMembers")]
     public async Task<ActionResult> GetMembers()
     {
-        var members = await _dbContext.Set<Member>()
-            .Include(m=>m.Coach)
-            .ToListAsync();
+        var members = await _repository.GetAllAsync();
         
         return Ok(members.Select(m=>new MemberResponse
         {
@@ -41,13 +39,15 @@ public class MemberController : ControllerBase
     [HttpGet(template: "{Id}")]
     public async Task<ActionResult> GetMembers(string Id)
     {
-        var member = await _dbContext.Members.Where(members => members.Id == Id)
-            .Include(member => member.Coach)
-            .FirstOrDefaultAsync();
-
-        if (member is null)
+        Member member;
+        
+        try
         {
-            return NotFound($"Member with Id: {Id} doesnt exist bro");
+            member = await _repository.GetByIdAsync(Id);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
         }
         
         return Ok(new MemberResponse
@@ -66,20 +66,16 @@ public class MemberController : ControllerBase
     public async Task<ActionResult> CreateMember([FromBody] MemberRequest memberRequest)
     {
         Member member = null;
-
-        //var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == memberRequest.CoachId);
         
         try
         {
-            member = await Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Email);
+            member = await _repository.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Email);
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
         }
-
-        _dbContext.Add(member);
-        await _dbContext.SaveChangesAsync();
+        
         return Ok(new MemberResponse
         {
             Id = member.Id,
@@ -92,20 +88,18 @@ public class MemberController : ControllerBase
         });
     }
     
-    
     [HttpDelete(template: "{Id}")]
     public async Task<ActionResult> DeleteMember(string Id)
     {
-        var member = await _dbContext.Members
-            .Include(member => member.Coach)
-            .FirstOrDefaultAsync(m => m.Id == Id);
-            
-
-        if (member is null)
-            return NotFound($"Member with Id: {Id} doesnt exis broteher");
-
-        _dbContext.Remove(member);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _repository.DeleteMember(Id);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
+        
         return Ok($"All good, {Id} is no longer along us");
     }
     
@@ -124,9 +118,9 @@ public class MemberController : ControllerBase
             return BadRequest($"Member with Id: {Id} doesn't have a coach");
 
         member.Coach = null;
-        
-        await _dbContext.SaveChangesAsync();
-        return Ok($"All good, {member.FirstName}'s coach is no longer along us");
+
+        await _repository.SaveAsync();
+        return Ok($"All good, {member.FirstName} is coach less from now on");
     }
     
     [HttpPatch(template: "PatchFirstName/{Id}")]
@@ -148,7 +142,7 @@ public class MemberController : ControllerBase
             return BadRequest(e.Message);
         }
 
-        await _dbContext.SaveChangesAsync();
+        await _repository.SaveAsync();
         return Ok(new MemberResponse
         {
             Id = member.Id,
@@ -182,7 +176,7 @@ public class MemberController : ControllerBase
             return BadRequest(e.Message);
         }
 
-        await _dbContext.SaveChangesAsync();
+        await _repository.SaveAsync();
         return Ok(new MemberResponse
         {
             Id = member.Id, 
@@ -218,7 +212,7 @@ public class MemberController : ControllerBase
             return BadRequest(e.Message);
         }
 
-        await _dbContext.SaveChangesAsync();
+        await _repository.SaveAsync();
         return Ok(new MemberResponse
         {
             Id = member.Id, 
