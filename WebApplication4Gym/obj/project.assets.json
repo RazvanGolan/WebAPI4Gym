@@ -1448,32 +1448,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/razvybitea/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\PC\\Projects\\WebAPI4Gym\\WebApplication4Gym\\WebApplication4Gym.csproj",
+      "projectUniqueName": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
       "projectName": "WebApplication4Gym",
-      "projectPath": "E:\\PC\\Projects\\WebAPI4Gym\\WebApplication4Gym\\WebApplication4Gym.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "E:\\PC\\Projects\\WebAPI4Gym\\WebApplication4Gym\\obj\\",
+      "projectPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/WebApplication4Gym.csproj",
+      "packagesPath": "/Users/razvybitea/.nuget/packages/",
+      "outputPath": "/Users/razvybitea/RiderProjects/WebApplication4Gym/WebAPI4Gym/WebApplication4Gym/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/razvybitea/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "/usr/local/share/dotnet/sdk/7.0.308/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1534,7 +1527,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.308/RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -22,22 +22,44 @@ public class MemberController : ControllerBase
     [HttpGet(Name = "GetAllMembers")]
     public async Task<ActionResult> GetMembers()
     {
-        var members = await _dbContext.Set<Entities.Members.Member>().ToListAsync();
+        var members = await _dbContext.Set<Member>()
+            .Include(m=>m.Coach)
+            .ToListAsync();
         
-        return Ok(members);
+        return Ok(members.Select(m=>new MemberResponse
+        {
+            FirstName = m.FirstName,
+            LastName = m.LastName,
+            Id = m.Id,
+            Email = m.Email,
+            GoldenState = m.GoldenState,
+            Created = m.Created,
+            CoachId = m.Coach?.Id
+        }));
     }
 
     [HttpGet(template: "{Id}")]
     public async Task<ActionResult> GetMembers(string Id)
     {
-        var member = await _dbContext.Members.Where(members => members.Id == Id).FirstOrDefaultAsync();
+        var member = await _dbContext.Members.Where(members => members.Id == Id)
+            .Include(member => member.Coach)
+            .FirstOrDefaultAsync();
 
         if (member is null)
         {
             return NotFound($"Member with Id: {Id} doesnt exist bro");
         }
         
-        return Ok(member);
+        return Ok(new MemberResponse
+        {
+            Id = member.Id,
+            FirstName = member.FirstName,
+            LastName = member.LastName,
+            Created = member.Created,
+            GoldenState = member.GoldenState,
+            Email = member.Email,
+            CoachId = member.Coach?.Id
+        });
     }
 
     [HttpPost]
@@ -45,11 +67,11 @@ public class MemberController : ControllerBase
     {
         Member member = null;
 
-        var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == memberRequest.CoachId);
+        //var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == memberRequest.CoachId);
         
         try
         {
-            member = await Entities.Members.Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, coach, memberRequest.Email);
+            member = await Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Email);
         }
         catch (Exception e)
         {
@@ -66,7 +88,7 @@ public class MemberController : ControllerBase
             Created = member.Created,
             GoldenState = member.GoldenState,
             Email = member.Email,
-            CoachId = coach.Id
+            CoachId = null
         });
     }
     
@@ -74,7 +96,10 @@ public class MemberController : ControllerBase
     [HttpDelete(template: "{Id}")]
     public async Task<ActionResult> DeleteMember(string Id)
     {
-        var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == Id);
+        var member = await _dbContext.Members
+            .Include(member => member.Coach)
+            .FirstOrDefaultAsync(m => m.Id == Id);
+            
 
         if (member is null)
             return NotFound($"Member with Id: {Id} doesnt exis broteher");
@@ -84,11 +109,13 @@ public class MemberController : ControllerBase
         return Ok($"All good, {Id} is no longer along us");
     }
     
-    /*
-    [HttpDelete(template: "{Id}")]
-    public ActionResult DeleteMemberCoach(string Id)
+    
+    [HttpDelete(template: "DeleteCoach/{Id}")]
+    public async Task<ActionResult> DeleteMemberCoach(string Id)
     {
-        var member = _dbContext.Members.FirstOrDefault(m => m.Id == Id);
+        var member = _dbContext.Members
+            .Include(member => member.Coach)
+            .FirstOrDefault(m => m.Id == Id);
 
         if (member is null)
             return NotFound($"Member with Id: {Id} doesnt exis broteher");
@@ -97,16 +124,17 @@ public class MemberController : ControllerBase
             return BadRequest($"Member with Id: {Id} doesn't have a coach");
 
         member.Coach = null;
-
-        _dbContext.Remove(member);
-        _dbContext.SaveChanges();
-        return Ok($"All good, {member.FirstName}'s member is no longer along us");
+        
+        await _dbContext.SaveChangesAsync();
+        return Ok($"All good, {member.FirstName}'s coach is no longer along us");
     }
-    */
-    [HttpPatch(template: "{Id}")]
+    
+    [HttpPatch(template: "PatchFirstName/{Id}")]
     public async Task<ActionResult> UpdateMemberFirstName(string Id, [FromBody] string firstName)
     {
-        var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == Id);
+        var member = await _dbContext.Members
+            .Include(member => member.Coach)
+            .FirstOrDefaultAsync(m => m.Id == Id);
 
         if (member is null)
             return NotFound($"Member with Id: {Id} doesnt exis broteher");
@@ -121,34 +149,59 @@ public class MemberController : ControllerBase
         }
 
         await _dbContext.SaveChangesAsync();
-        return Ok(member);
+        return Ok(new MemberResponse
+        {
+            Id = member.Id,
+            FirstName = member.FirstName,
+            LastName = member.LastName,
+            Created = member.Created,
+            GoldenState = member.GoldenState,
+            Email = member.Email,
+            CoachId = member.Coach?.Id
+        });
     } 
-    /*
-    [HttpPatch(template: "{Id}")]
-    public ActionResult UpdateMemberCoach(string Id, [FromBody] Coach coach)
+    
+    [HttpPatch(template: "PatchCoach/{Id}")]
+    public async Task<ActionResult> UpdateMemberCoach(string Id, [FromBody] string coachId)
     {
-        var member = _dbContext.Members.FirstOrDefault(m => m.Id == Id);
-
+        var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == Id);
+        var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == coachId);
+        
         if (member is null)
-            return NotFound($"Member with Id: {Id} doesnt exis broteher");
+            return NotFound($"Member with Id: {Id} doesnt exist brother");
+        
+        if (coach is null)
+            return NotFound($"Coach with Id: {coachId} doesnt exist brother");
         
         try
         {
-            member.setCoach(coach);
+            member.Coach = coach;
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
         }
 
-        _dbContext.SaveChanges();
-        return Ok(member);
+        await _dbContext.SaveChangesAsync();
+        return Ok(new MemberResponse
+        {
+            Id = member.Id, 
+            FirstName = member.FirstName, 
+            LastName = member.LastName,
+            Created = member.Created,
+            GoldenState = member.GoldenState,
+            Email = member.Email,
+            CoachId = coach.Id
+        });
+
     }
-    */
+    
     [HttpPut(template: "{Id}")]
     public async Task<ActionResult> UpdateMember(string Id, [FromBody] MemberRequest memberRequest)
     {        
-        var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == Id);
+        var member = await _dbContext.Members
+            .Include(member => member.Coach)
+            .FirstOrDefaultAsync(m => m.Id == Id);
 
         if (member is null)
             return NotFound($"Member with Id: {Id} doesnt exist brother");
@@ -166,6 +219,15 @@ public class MemberController : ControllerBase
         }
 
         await _dbContext.SaveChangesAsync();
-        return Ok(member);
+        return Ok(new MemberResponse
+        {
+            Id = member.Id, 
+            FirstName = member.FirstName, 
+            LastName = member.LastName,
+            Created = member.Created,
+            GoldenState = member.GoldenState,
+            Email = member.Email,
+            CoachId = member.Coach?.Id
+        });
     }
 }

@@ -45,22 +45,40 @@ public class CoachController : ControllerBase
 
     }
 
-    /*
+    
     [HttpGet(template: "{Id}")]
-    public ActionResult GetCoach(string Id)
+    public async Task<ActionResult> GetCoach(string Id)
     {
-        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Id == Id);
+        var coach = await _dbContext.Coaches
+            .Include(coach => coach.MemberList)
+            .FirstOrDefaultAsync(c => c.Id == Id);
 
         if (coach is null)
             return NotFound($"Coach with {Id} doesn't exist");
 
-        return Ok(coach);
+        return Ok(new CoachResponse
+        {
+            Id = coach.Id,
+            FirstName = coach.FirstName,
+            LastName = coach.LastName,
+            Created = coach.Created,
+            Members = coach.MemberList.Select(m=> new MemberResponse
+            {
+                Id = m.Id,
+                FirstName = m.FirstName,
+                LastName = m.LastName,
+                Created = m.Created,
+                GoldenState = m.GoldenState,
+                Email = m.Email,
+                CoachId = coach.Id
+            }).ToList()
+        });
     }
-    */
+    
     [HttpPost]
     public async Task<ActionResult> AddCoach([FromBody] CoachRequest coachRequest)
     {
-        Coach coach = null;
+        Coach coach;
         try
         {
             coach = await Entities.Coaches.Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date);
@@ -79,17 +97,24 @@ public class CoachController : ControllerBase
     [HttpDelete(template: "{Id}")]
     public ActionResult DeleteCoach(string Id)
     {
-        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Id == Id);
+        var coach = _dbContext.Coaches
+            .Include(coach => coach.MemberList)
+            .FirstOrDefault(c => c.Id == Id);
         
         if (coach is null)
             return NotFound($"Coach with {Id} doesn't exist");
+
+        foreach (var member in coach.MemberList)
+        {
+            member.Coach = null;
+        }
 
         _dbContext.Remove(coach);
         _dbContext.SaveChanges();
         
         return Ok($"All good, {Id} is no longer along us");
     }
-    /*
+    
     [HttpPatch(template: "{Id}")]
     public ActionResult UpdateCoachFirstName(string Id, [FromBody] string firstName)
     {
@@ -101,33 +126,6 @@ public class CoachController : ControllerBase
         try
         {
             coach.SetFirstName(firstName);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-
-        _dbContext.SaveChanges();
-        return Ok(coach);
-    }
-    */
-    
-    [HttpPatch(template: "{Id}")]
-    public ActionResult UpdateCoachMembers(string Id, [FromBody] string memberId)
-    {
-        var coach = _dbContext.Coaches.FirstOrDefault(c => c.Id == Id);
-        
-        if (coach is null)
-            return NotFound($"Coach with {Id} doesn't exist");
-
-        var member = _dbContext.Members.FirstOrDefault(m => m.Id == memberId);
-
-        if (member is null)
-            return NotFound($"Member with {Id} doesn't exist");
-        
-        try
-        {
-            coach.addMember(member);
         }
         catch (Exception e)
         {
@@ -150,9 +148,7 @@ public class CoachController : ControllerBase
         {
             coach.SetFirstName(coachRequest.FirstName);
             coach.SetLastName(coachRequest.LastName);
-            
-            if(coachRequest.Date is not "string")
-                coach.SetCreated(coachRequest.Date);
+            coach.SetCreated(coachRequest.Date);
         }
         catch (Exception e)
         {

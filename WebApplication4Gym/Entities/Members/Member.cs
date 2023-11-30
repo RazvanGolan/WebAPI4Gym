@@ -10,14 +10,14 @@ public class Member : Entity
     public DateTime Created { get; private set; }
     public bool GoldenState { get; private set; }
     public string Email { get; private set; }
-    public Coach Coach { get;  set; }
+    public Coach? Coach { get;  set; }
     
     private Member()
     {
         
     }
 
-    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, Coach coach, string email)
+    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, string email)
     {
         
         if (string.IsNullOrWhiteSpace(firstname))
@@ -55,7 +55,7 @@ public class Member : Entity
             LastName = lastname,
             Created = parsed,
             GoldenState = false,
-            Coach = coach, 
+            Coach = null, 
             Email = email
         };
         //getting total number of days
@@ -114,7 +114,7 @@ public class Member : Entity
         Created = parse;
     }
 
-    public void setCoach(Coach coach)
+    public void SetCoach(Coach coach)
     {
         Coach = coach;
     }
