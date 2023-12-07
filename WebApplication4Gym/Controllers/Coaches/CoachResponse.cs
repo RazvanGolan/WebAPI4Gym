@@ -10,6 +10,6 @@ public class CoachResponse
     public string LastName { get;  set; }
     
     public DateTime Created { get;  set; }
-
-    public List<MemberResponse> Members { get; set; } 
+    public int Limit { get; set; }
+    public List<MemberResponse> Members { get; set; }
 }

@@ -31,6 +31,7 @@ public class CoachController : ControllerBase
             FirstName = c.FirstName,
             LastName = c.LastName,
             Created = c.Created,
+            Limit = c.Limit,
             Members = c.MemberList.Select(m=> new MemberResponse
             {
                 Id = m.Id,
@@ -62,6 +63,7 @@ public class CoachController : ControllerBase
             FirstName = coach.FirstName,
             LastName = coach.LastName,
             Created = coach.Created,
+            Limit = coach.Limit,
             Members = coach.MemberList.Select(m=> new MemberResponse
             {
                 Id = m.Id,
@@ -81,7 +83,8 @@ public class CoachController : ControllerBase
         Coach coach;
         try
         {
-            coach = await Entities.Coaches.Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date);
+            coach = await Coach.CreateAsync(coachRequest.FirstName, coachRequest.LastName, coachRequest.Date,
+                coachRequest.Limit);
         }
         catch (Exception e)
         {
