@@ -17,17 +17,52 @@ public class Member : Entity
         
     }
 
-    public static Member CreateAsync(string firstname, string lastname, DateTime date, string email)
+    public static async Task<Member> CreateAsync(IMemberRepository _repository, string firstname, string lastname, string date, string email)
     {
-        return new Member
+        if (string.IsNullOrWhiteSpace(firstname))
+            throw new Exception("First name can't be empty.");
+
+        if (string.IsNullOrWhiteSpace(lastname))
+            throw new Exception("last name can't be empty.");
+        
+        if (string.IsNullOrWhiteSpace(date))
+            throw new Exception("date can't be empty.");
+        
+        DateTime parsed;
+        
+        string[] formats = { "dd/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "d/MM/yyyy",
+            "dd/MM/yy", "dd/M/yy", "d/M/yy", "d/MM/yy", "dd-MM-yyyy"};
+        
+        if (!DateTime.TryParseExact(date, formats, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out parsed))
+            throw new Exception("incorrect date format");
+
+        if (!await _repository.IsEmailUnique(email))
+            throw new Exception("this email is already used by another member");
+
+        if (!CheckEmail(email))
+            throw new Exception("Invalid email");
+        
+        var x = new Member
         {
             FirstName = firstname,
             LastName = lastname,
-            Created = date,
+            Created = parsed,
             GoldenState = false,
             Coach = null,
             Email = email
         };
+        
+        //getting total number of days
+        var totalDays = (DateTime.Now - x.Created).Days;
+
+        if (totalDays >= 90)
+            x.GoldenState = true;
+
+        await _repository.Create(x);
+        await _repository.SaveAsync();
+        
+        return x;
     }
     
     public void SetFirstName(string firstName)
@@ -50,15 +85,7 @@ public class Member : Entity
 
     public void SetEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("date can't be empty.");
-        else
-        {
-            string pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
-            Regex regex = new Regex(pattern);
-            if (!regex.IsMatch(email))
-                throw new Exception("Email is not valid");
-        }
+        CheckEmail(email);   
 
         Email = email;
     }
@@ -76,10 +103,15 @@ public class Member : Entity
         
         Created = parse;
     }
-
-    public void SetGoldenState()
+    public static bool CheckEmail(string email)
     {
-        GoldenState = true;
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+        
+        var pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+        var regex = new Regex(pattern);
+        
+        return regex.IsMatch(email);
     }
     
 

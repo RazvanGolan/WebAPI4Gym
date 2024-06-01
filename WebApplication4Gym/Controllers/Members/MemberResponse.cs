@@ -8,5 +8,5 @@ public class MemberResponse
     public DateTime Created { get;  set; }
     public bool GoldenState { get;  set; }
     public string Email { get;  set; }
-    public string? CoachId { get;  set; }
+    public string? CoachId { get;  set; } // nu e obligatoriu
 }

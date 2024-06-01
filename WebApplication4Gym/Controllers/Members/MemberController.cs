@@ -69,7 +69,7 @@ public class MemberController : ControllerBase
         
         try
         {
-            member = await _repository.Create(memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Email);
+            member = await Member.CreateAsync(_repository, memberRequest.FirstName, memberRequest.LastName, memberRequest.Date, memberRequest.Email);
         }
         catch (Exception e)
         {
@@ -159,7 +159,8 @@ public class MemberController : ControllerBase
     public async Task<ActionResult> UpdateMemberCoach(string Id, [FromBody] string coachId)
     {
         var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == Id);
-        var coach = await _dbContext.Coaches.FirstOrDefaultAsync(c => c.Id == coachId);
+        var coach = await _dbContext.Coaches.Include(coach => coach.MemberList)
+            .FirstOrDefaultAsync(c => c.Id == coachId);
         
         if (member is null)
             return NotFound($"Member with Id: {Id} doesnt exist brother");
@@ -169,7 +170,7 @@ public class MemberController : ControllerBase
         
         try
         {
-            member.Coach = coach;
+            coach.AddMember(member);
         }
         catch (Exception e)
         {

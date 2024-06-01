@@ -12,12 +12,14 @@ public class Coach : Entity
 
     public List<Member> MemberList { get; set; } = new ();
 
+    public int Limit { get; private set; }
+
     private Coach()
     {
         
     }
 
-    public static async Task<Coach> CreateAsync(string firstname, string lastname, string date)
+    public static async Task<Coach> CreateAsync(string firstname, string lastname, string date, int limit)
     {
         if (string.IsNullOrWhiteSpace(firstname))
             throw new Exception("First name can't be empty.");
@@ -36,11 +38,15 @@ public class Coach : Entity
         if(!DateTime.TryParseExact(date, formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsed))
             throw new Exception("incorrect date format");
 
+        if (limit <= 0)
+            throw new Exception("Incorect limit format");
+            
         return new Coach
         {
             FirstName = firstname,
             LastName = lastname,
-            Created = parsed
+            Created = parsed,
+            Limit = limit
         };
     }
     
@@ -77,11 +83,18 @@ public class Coach : Entity
         Created = parse;
     }
 
-
-
-    public void addMember(Member member)
+    public int GetLimit()
     {
+        return Limit;
+    }
+
+    public void AddMember(Member member)
+    {
+        if (Limit == MemberList.Count)
+            throw new Exception($"Coach with id: {Id} has too many members");
+        
         MemberList.Add(member);
+        
     }
     
 }
