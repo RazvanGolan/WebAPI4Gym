@@ -108,7 +108,7 @@ public class Member : Entity
         if (string.IsNullOrWhiteSpace(email))
             return false;
         
-        string pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+        var pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
         var regex = new Regex(pattern);
         
         return regex.IsMatch(email);
